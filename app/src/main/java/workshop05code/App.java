@@ -24,7 +24,7 @@ public class App {
             LogManager.getLogManager().readConfiguration(new FileInputStream("resources/logging.properties"));
         } catch (SecurityException | IOException e1) {
             e1.printStackTrace();
-        }
+       }
     }
 
     private static final Logger logger = Logger.getLogger(App.class.getName());
