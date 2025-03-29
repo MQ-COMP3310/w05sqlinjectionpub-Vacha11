@@ -135,7 +135,8 @@ public class SQLiteConnectionManager {
         stmt.executeUpdate(); */
 
         if (!word.matches("[a-z]{4}")) {
-            System.out.println("Ignoring invalid word: " + word);
+            logger.log(Level.WARNING, "Ignoring invalid word: {0}", word);
+            // System.out.println("Ignoring invalid word: " + word);
             return;
         }
 
@@ -146,7 +147,8 @@ public class SQLiteConnectionManager {
                 pstmt.setString(2, word);
                 pstmt.executeUpdate();
             } catch (SQLException e){
-                System.out.println(e.getMessage());
+                //System.out.println(e.getMessage());
+                logger.log(Level.SEVERE, "Error inserting word into database", e);
             }
 
         /*try (Connection conn = DriverManager.getConnection(databaseURL);
@@ -173,7 +175,7 @@ public class SQLiteConnectionManager {
 
 
         String sql = "Select count(id) as total FROM validWords WHERE word like ?";
-        try (Connection conn = DriverManager.getConnection(databaseURL);
+       /*  try (Connection conn = DriverManager.getConnection(databaseURL);
             PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, guess);
             } catch (SQLException e){
@@ -194,7 +196,20 @@ public class SQLiteConnectionManager {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
+        } */
+        //String sql = "SELECT count(id) as total FROM validWords WHERE word = ?";
+        try (Connection conn = DriverManager.getConnection(databaseURL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, guess);
+            ResultSet resultRows = stmt.executeQuery();
+            if (resultRows.next()) {
+                return resultRows.getInt("total") >= 1;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.WARNING, "Error checking word validity", e);
         }
+        return false;
+    
 
     }
 }
