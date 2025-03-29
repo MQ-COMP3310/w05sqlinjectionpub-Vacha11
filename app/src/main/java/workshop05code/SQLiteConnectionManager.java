@@ -134,6 +134,11 @@ public class SQLiteConnectionManager {
         stmt.setString(2, word);
         stmt.executeUpdate(); */
 
+        if (!word.matches("[a-z]{4}")) {
+            System.out.println("Ignoring invalid word: " + word);
+            return;
+        }
+
         String sql = "INSERT INTO validWords(id,word) VALUES (?,?)";
         try (Connection conn = DriverManager.getConnection(databaseURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -165,6 +170,7 @@ public class SQLiteConnectionManager {
         PreparedStatement query1 = connection.prepareStatement(sql);
         query1.setString(1, guess);
         ResultSet rs = query1.executeQuery(); */
+
 
         String sql = "Select count(id) as total FROM validWords WHERE word like ?";
         try (Connection conn = DriverManager.getConnection(databaseURL);

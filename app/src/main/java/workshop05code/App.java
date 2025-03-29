@@ -56,16 +56,27 @@ public class App {
             String line;
             int i = 1;
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                if (line.matches("[a-z]{4}")) {
+                    wordleDatabaseConnection.addValidWord(i, line);
+                    i++;
+                } else{ 
+                    System.out.println("Ignoring Invalid word in data.txt: " + line);
+                }
+            }
+                /*System.out.println(line);
                 wordleDatabaseConnection.addValidWord(i, line);
-                i++;
+                i++; */
+            } catch (IOException e) {
+                System.out.println("Not able to load. Sorry!");
+                System.out.println(e.getMessage());
+                return;
             }
 
-        } catch (IOException e) {
+        /* } catch (IOException e) {
             System.out.println("Not able to load . Sorry!");
             System.out.println(e.getMessage());
             return;
-        }
+        }*/
 
         // let's get them to enter a word
 
@@ -76,15 +87,18 @@ public class App {
         
 
             while (!guess.equals("q")) {
-                //if (guess.matches("[a-zA-Z]{4}$")){
-                System.out.println("You've guessed '" + guess+"'.");
+                if (guess.matches("[a-zA-Z]{4}$")){
+                    System.out.println("You've guessed '" + guess+"'.");
+                    
 
                 if (wordleDatabaseConnection.isValidWord(guess)) { 
                     System.out.println("Success! It is in the the list.\n");
                 }else{
                     System.out.println("Sorry. This word is NOT in the the list.\n");
                 } //else {System.out.println("The word '" + guess + "' is not a valid word.");}
-
+            } else{
+                System.out.println("The word '" + guess + "' is not a valid word. Please enter a valid 4-letter word.");
+            }
                 System.out.print("Enter a 4 letter word for a guess or q to quit: " );
                 guess = scanner.nextLine();
             }
